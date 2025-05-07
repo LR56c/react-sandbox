@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import UploadFiles             from "@/components/UploadFiles"
 
 export default function VideoDetail() {
-  const [videoData, setVideoData] = useState(  )
+  const [videoData, setVideoData] = useState<any | null>(null)
   const { videoId }               = useParams()
   const convex                    = useConvex()
   const GetVideoData              = async () => {
@@ -18,22 +18,29 @@ export default function VideoDetail() {
   useEffect( () => {
     GetVideoData()
   }, [] )
+
   const onHandleInputChange = ( field: string, value: string ) => {
-      setVideoData( ( prev ) => ({
+    setVideoData( ( prev ) => (
+      {
         ...prev,
         [field]: value
-      }))
+      }
+    ) )
   }
 
   return (
     <div>
       <h2 className="font-bold text-2xl">Create Video Ad</h2>
       <div className="grid grid-cols-1 md:grid-cols-3">
-        <div className="md:col-span-2">
-          <VideoScript videoData={ videoData }
-                       onHandleInputChange={ onHandleInputChange }/>
-          <UploadFiles videoData={ videoData }/>
-        </div>
+        {
+          videoData ?
+            <div className="md:col-span-2">
+              <VideoScript videoData={ videoData }
+                           onHandleInputChange={ onHandleInputChange }/>
+              <UploadFiles videoData={ videoData }/>
+            </div>
+            : null
+        }
         <div>
           Preview
         </div>

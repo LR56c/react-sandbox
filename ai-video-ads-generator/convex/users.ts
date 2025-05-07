@@ -1,5 +1,5 @@
-import { mutation } from "@/convex/_generated/server"
-import { v }        from "convex/values"
+import { mutation, query } from "@/convex/_generated/server"
+import { v }               from "convex/values"
 
 export const CreateNewUser = mutation( {
   args   : {
@@ -22,3 +22,15 @@ export const CreateNewUser = mutation( {
     return { _id: result, ...data }
   }
 } )
+
+export const GetUserByEmail = query({
+  args   : {
+    email: v.string()
+  },
+  handler: async ( ctx, args ) => {
+    return await ctx.db.query( "users" ).filter(
+      q => q.eq( q.field( "email" ), args.email )
+    ).first()
+  }
+})
+

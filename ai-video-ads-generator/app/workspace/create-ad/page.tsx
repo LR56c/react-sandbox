@@ -2,9 +2,9 @@
 import { Input }  from "@/components/ui/input"
 import { Button }                 from "@/components/ui/button"
 import { LoaderCircle, Sparkles } from "lucide-react"
-import Image                      from "next/image"
-import { useState } from "react"
-import axios from "axios"
+import Image                   from "next/image"
+import { useEffect, useState } from "react"
+import axios                   from "axios"
 import { useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { useUserDetailStore } from "@/store/useUserDetail"
@@ -14,7 +14,7 @@ export default function CreateAd() {
   const router = useRouter()
   const [userInput, setUserInput] = useState("")
   const [loading, setLoading] = useState(false)
-  const user = useUserDetailStore(state => state.user)
+  const userDetail = useUserDetailStore(state => state.user)
   const createNewVideoData = useMutation(api.videoData.CreateNewVideoData)
   const handleGenerateVideoScript = async ()=>{
     setLoading(true)
@@ -22,13 +22,11 @@ export default function CreateAd() {
       userInput: userInput
     })
     const jsonContent = JSON.parse( result.data.replace( "```json", "" ).replace( "```", "" ) ) ?? []
-    console.log("jsonContent", jsonContent)
     const saved = await createNewVideoData({
-      userId: user?._id,
+      userId: userDetail?._id,
       topic: userInput,
       scriptVariant:jsonContent,
     })
-    console.log("saved", saved)
     setLoading(false)
     router.push(`/workspace/create-ad/${saved}`)
   }

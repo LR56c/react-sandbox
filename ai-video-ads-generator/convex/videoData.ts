@@ -3,18 +3,17 @@ import { mutation, query } from "@/convex/_generated/server"
 
 export const CreateNewVideoData = mutation( {
   args   : {
-    userId       : v.string(),
+    userId       : v.id('users'),
     topic        : v.string(),
     scriptVariant: v.any()
   },
   handler: async ( ctx, args ) => {
-    const result = await ctx.db.insert( "videoData", {
+    return await ctx.db.insert( "videoData", {
         userId       : args.userId,
         topic        : args.topic,
         scriptVariant: args.scriptVariant
       }
     )
-    return result
   }
 } )
 
